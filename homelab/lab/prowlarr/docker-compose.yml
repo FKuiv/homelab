@@ -1,0 +1,20 @@
+networks:
+  homelab:
+    external: true
+
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:1.17.2
+    container_name: prowlarr
+    networks:
+      - homelab
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Tallinn
+    volumes:
+      - ./config:/config
+    ports:
+      - 8099:9696
+    restart: unless-stopped
+

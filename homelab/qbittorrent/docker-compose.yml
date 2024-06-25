@@ -1,0 +1,35 @@
+networks:
+  homelab:
+    external: true
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    networks:
+      - homelab
+    cap_add:
+      - NET_ADMIN
+    ports: #make sure to include these for qbittorrent to work
+      - 6081:6881
+      - 6081:6881/udp
+      - 8095:8095
+    env_file:
+      - .env
+    volumes:
+      - ./gluetun:/gluetun
+    restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:4.6.4
+    container_name: qbittorrent
+    network_mode: "container:gluetun"
+    env_file:
+      - .env
+    volumes:
+      - ./config:/config
+      - /homelab/downloads:/downloads
+      - ./vuetorrent:/vuetorrent
+    restart: unless-stopped
+    depends_on:
+      - gluetun

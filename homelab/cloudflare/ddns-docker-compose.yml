@@ -1,0 +1,23 @@
+services:
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    network_mode: host
+    # This makes IPv6 easier; see below
+    restart: always
+    # Restart the updater after reboot
+    cap_add:
+      # Capability to change user ID; needed for using PUID
+      - SETUID
+        # Capability to change group ID; needed for using PGID
+      - SETGID
+      # Drop all other capabilities
+    cap_drop:
+      - all
+    # Make the container filesystem read-only
+    read_only: true
+    security_opt:
+      # Another protection to restrict superuser privileges
+      - no-new-privileges:false
+    env_file:
+      - .env

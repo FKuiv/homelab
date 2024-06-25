@@ -1,0 +1,14 @@
+networks:
+  homelab:
+    external: true
+
+services:
+  tunnel:
+    container_name: cloudflare-tunnel
+    image: cloudflare/cloudflared:2024.4.1
+    restart: always
+    env_file:
+      - .env
+    command: tunnel --no-autoupdate run
+    networks:
+      - homelab

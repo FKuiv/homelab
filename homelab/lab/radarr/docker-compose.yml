@@ -1,0 +1,21 @@
+networks:
+  homelab:
+    external: true
+
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:5.6.0
+    container_name: radarr
+    networks:
+      - homelab
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Tallinn
+    volumes:
+      - ./config:/config
+      - /homelab/media/movies:/movies 
+      - /homelab/downloads:/downloads
+    ports:
+      - 8097:7878
+    restart: unless-stopped

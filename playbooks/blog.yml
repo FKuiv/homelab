@@ -1,0 +1,16 @@
+- name: Setup app
+  hosts: blog
+
+  tasks:
+    - name: Add necessary files for the app
+      synchronize:
+        src: ../blog
+        dest: ~/
+        delete: yes
+
+    - name: Start the app
+      community.docker.docker_compose_v2:
+        project_src: ~/blog/
+        state: present # This can be 'started', 'stopped', 'restarted', 'absent'
+        build: always # Optional: Set to yes if you want to build images
+

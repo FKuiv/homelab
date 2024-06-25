@@ -1,0 +1,35 @@
+services:
+  ghost:
+    container_name: ghost
+    image: ghost:5.85
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - ./ghost:/var/lib/ghost/content
+
+  db:
+    container_name: db-ghost
+    image: mysql:8.4.0
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  nginx:
+    container_name: nginx-ghost
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - ghost
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/certs/
+      - ./nginx/html:/usr/share/nginx/html

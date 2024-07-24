@@ -6,16 +6,13 @@ services:
     # This makes IPv6 easier; see below
     restart: always
     # Restart the updater after reboot
-    cap_add:
-      # Capability to change user ID; needed for using PUID
-      - SETUID
-        # Capability to change group ID; needed for using PGID
-      - SETGID
-      # Drop all other capabilities
+    user: "${PUID}:${PGID}"
+    # Run the updater with specific user/group IDs
     cap_drop:
       - all
-    # Make the container filesystem read-only
+      # Drop all other capabilities
     read_only: true
+    # Make the container filesystem read-only
     security_opt:
       # Another protection to restrict superuser privileges
       - no-new-privileges:false
